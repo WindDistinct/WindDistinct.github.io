@@ -60,7 +60,7 @@ function initializeFilters() {
 
 // Carga de datos
 function loadData(source = "Buddy-Hield-Shotdata.csv") {
-	Papa.parse(source, {
+	Papa.parse(`data/${source}`, {
 		header: true,
 		download: true,
 		dynamicTyping: true,

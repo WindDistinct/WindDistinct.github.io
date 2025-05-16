@@ -23,15 +23,15 @@
             <h2 class="text-lg font-bold">Players</h2>
             <div class="space-y-3">
                 <div onclick="loadData('Brandon-Podziemski-Shotdata.csv')" class="cursor-pointer text-center">
-                    <img class="w-20 h-20 rounded-full mx-auto" src="brandon-podziemski.jpg" alt="Brandon Podziemski" />
+                    <img class="w-20 h-20 rounded-full mx-auto" src="img/user.png" alt="Brandon Podziemski" />
                     <p class="mt-2 text-sm">Brandon Podziemski</p>
                 </div>
                 <div onclick="loadData('Buddy-Hield-Shotdata.csv')" class="cursor-pointer text-center">
-                    <img class="w-20 h-20 rounded-full mx-auto" src="buddy-hield.jpg" alt="Buddy Hield" />
+                    <img class="w-20 h-20 rounded-full mx-auto" src="img/user.png" alt="Buddy Hield" />
                     <p class="mt-2 text-sm">Buddy Hield</p>
                 </div>
                 <div onclick="loadData('Moses-Moody-Shotdata.csv')" class="cursor-pointer text-center">
-                    <img class="w-20 h-20 rounded-full mx-auto" src="moses-moody.jpg" alt="Moses Moody" />
+                    <img class="w-20 h-20 rounded-full mx-auto" src="img/user.png" alt="Moses Moody" />
                     <p class="mt-2 text-sm">Moses Moody</p>
                 </div>
             </div>
@@ -51,15 +51,15 @@
             </div>
             <div class="space-y-3">
                 <div onclick="loadData('Brandon-Podziemski-Shotdata.csv')" class="cursor-pointer text-center">
-                    <!-- <img class="w-20 h-20 rounded-full mx-auto" src="brandon-podziemski.jpg" alt="Brandon Podziemski" /> -->
+                    <img class="w-20 h-20 rounded-full mx-auto" src="img/user.png" alt="Brandon Podziemski" />
                     <p class="mt-2 text-sm">Brandon Podziemski</p>
                 </div>
                 <div onclick="loadData('Buddy-Hield-Shotdata.csv')" class="cursor-pointer text-center">
-                    <!-- <img class="w-20 h-20 rounded-full mx-auto" src="buddy-hield.jpg" alt="Buddy Hield" /> -->
+                    <img class="w-20 h-20 rounded-full mx-auto" src="img/user.png" alt="Buddy Hield" />
                     <p class="mt-2 text-sm">Buddy Hield</p>
                 </div>
                 <div onclick="loadData('Moses-Moody-Shotdata.csv')" class="cursor-pointer text-center">
-                    <!-- <img class="w-20 h-20 rounded-full mx-auto" src="moses-moody.jpg" alt="Moses Moody" /> -->
+                    <img class="w-20 h-20 rounded-full mx-auto" src="img/user.png" alt="Moses Moody" />
                     <p class="mt-2 text-sm">Moses Moody</p>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 <h2 class="text-xl font-semibold">Filters</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- Year -->
-                    <details id="year" data-field="Year" class="bg-white p-4 rounded shadow" open>
+                    <details id="year" data-field="Year" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Year</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -103,8 +103,7 @@
                     </details>
 
                     <!-- Player Direction -->
-                    <details id="player_direction" data-field="Player Direction" class="bg-white p-4 rounded shadow"
-                        open>
+                    <details id="player_direction" data-field="Player Direction" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Player Direction</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -135,7 +134,7 @@
                     </details>
 
                     <!-- Pass Direction -->
-                    <details id="pass_direction" data-field="Pass Direction" class="bg-white p-4 rounded shadow" open>
+                    <details id="pass_direction" data-field="Pass Direction" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Pass Direction</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -162,7 +161,7 @@
                     </details>
 
                     <!-- Hop/1-2 -->
-                    <details id="hop" data-field="Hop/1-2" class="bg-white p-4 rounded shadow" open>
+                    <details id="hop" data-field="Hop/1-2" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Hop/1-2</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -185,8 +184,7 @@
                     </details>
 
                     <!-- Defender Distance -->
-                    <details id="defender_distance" data-field="Defender Distance" class="bg-white p-4 rounded shadow"
-                        open>
+                    <details id="defender_distance" data-field="Defender Distance" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Defender Distance</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -213,7 +211,7 @@
                     </details>
 
                     <!-- Make/Miss -->
-                    <details id="make_miss" data-field="Make/Miss" class="bg-white p-4 rounded shadow" open>
+                    <details id="make_miss" data-field="Make/Miss" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Make/Miss</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -232,8 +230,7 @@
                     </details>
 
                     <!-- Offensive Action -->
-                    <details id="offensive_action" data-field="Offensive Action" class="bg-white p-4 rounded shadow"
-                        open>
+                    <details id="offensive_action" data-field="Offensive Action" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Offensive Action</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -283,7 +280,7 @@
                     </details>
 
                     <!-- Area -->
-                    <details id="area" data-field="Area" class="bg-white p-4 rounded shadow" open>
+                    <details id="area" data-field="Area" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Area</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
@@ -314,7 +311,7 @@
                     </details>
 
                     <!-- Off Dribble Hand -->
-                    <details id="off_dribble" data-field="Off Dribble Hand" class="bg-white p-4 rounded shadow" open>
+                    <details id="off_dribble" data-field="Off Dribble Hand" class="bg-white p-4 rounded shadow">
                         <summary class="filter-title font-semibold cursor-pointer">Player Direction</summary>
                         <div class="filter-options mt-2 space-y-1">
                             <label class="block">
