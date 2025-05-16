@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basketball Shot Stats</title>
+
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+
+    <!-- Chart.js & plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar (Desktop) -->
+        <aside class="bg-white border-r w-64 hidden lg:flex flex-col p-4 space-y-4" id="sidebar">
+            <h2 class="text-lg font-bold">Players</h2>
+            <div class="space-y-3">
+                <div onclick="loadData('Brandon-Podziemski-Shotdata.csv')" class="cursor-pointer text-center">
+                    <img class="w-20 h-20 rounded-full mx-auto" src="brandon-podziemski.jpg" alt="Brandon Podziemski" />
+                    <p class="mt-2 text-sm">Brandon Podziemski</p>
+                </div>
+                <div onclick="loadData('Buddy-Hield-Shotdata.csv')" class="cursor-pointer text-center">
+                    <img class="w-20 h-20 rounded-full mx-auto" src="buddy-hield.jpg" alt="Buddy Hield" />
+                    <p class="mt-2 text-sm">Buddy Hield</p>
+                </div>
+                <div onclick="loadData('Moses-Moody-Shotdata.csv')" class="cursor-pointer text-center">
+                    <img class="w-20 h-20 rounded-full mx-auto" src="moses-moody.jpg" alt="Moses Moody" />
+                    <p class="mt-2 text-sm">Moses Moody</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Sidebar Toggle -->
+        <div class="lg:hidden absolute top-4 left-4 z-50">
+            <button onclick="toggleSidebar()" class="bg-blue-600 text-white px-4 py-2 rounded shadow">Menu</button>
+        </div>
+
+        <!-- Mobile Sidebar -->
+        <div id="mobileSidebar"
+            class="fixed inset-y-0 left-0 w-64 bg-white border-r z-40 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden p-4 space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold">Players</h2>
+                <button onclick="toggleSidebar()" class="text-blue-600 font-semibold">Cerrar</button>
+            </div>
+            <div class="space-y-3">
+                <div onclick="loadData('Brandon-Podziemski-Shotdata.csv')" class="cursor-pointer text-center">
+                    <!-- <img class="w-20 h-20 rounded-full mx-auto" src="brandon-podziemski.jpg" alt="Brandon Podziemski" /> -->
+                    <p class="mt-2 text-sm">Brandon Podziemski</p>
+                </div>
+                <div onclick="loadData('Buddy-Hield-Shotdata.csv')" class="cursor-pointer text-center">
+                    <!-- <img class="w-20 h-20 rounded-full mx-auto" src="buddy-hield.jpg" alt="Buddy Hield" /> -->
+                    <p class="mt-2 text-sm">Buddy Hield</p>
+                </div>
+                <div onclick="loadData('Moses-Moody-Shotdata.csv')" class="cursor-pointer text-center">
+                    <!-- <img class="w-20 h-20 rounded-full mx-auto" src="moses-moody.jpg" alt="Moses Moody" /> -->
+                    <p class="mt-2 text-sm">Moses Moody</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <main class="flex-1 overflow-y-auto p-6 space-y-10">
+            <header>
+                <h1 class="text-2xl font-bold mb-4">3PT Shooting Dashboard</h1>
+            </header>
+
+            <!-- Chart -->
+            <section>
+                <h2 class="text-xl font-semibold mb-2">Offensive Actions vs PPP</h2>
+                <div class="bg-white rounded shadow p-4">
+                    <canvas id="shotChart" class="w-full aspect-video"></canvas>
+                </div>
+            </section>
+
+            <!-- Colapsable Filters: Should be grouped and ordered to not occupy a big section of the screen -->
+            <section class="filter-section space-y-4">
+                <h2 class="text-xl font-semibold">Filters</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Year -->
+                    <details id="year" data-field="Year" class="bg-white p-4 rounded shadow" open>
+                        <summary class="filter-title font-semibold cursor-pointer">Year</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="2023-2024">
+                                2023-2024
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="2024-2025" checked>
+                                2024-2025
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Player Direction -->
+                    <details id="player_direction" data-field="Player Direction" class="bg-white p-4 rounded shadow"
+                        open>
+                        <summary class="filter-title font-semibold cursor-pointer">Player Direction</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Away From Hoop" checked>
+                                Away From Hoop
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Left" checked>
+                                Left
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Right" checked>
+                                Right
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Stationary" checked>
+                                Stationary
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="To Hoop" checked>
+                                To Hoop
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Pass Direction -->
+                    <details id="pass_direction" data-field="Pass Direction" class="bg-white p-4 rounded shadow" open>
+                        <summary class="filter-title font-semibold cursor-pointer">Pass Direction</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="From Hoop" checked>
+                                From Hoop
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Left" checked>
+                                Left
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Right" checked>
+                                Right
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="N/A Off Dribble" checked>
+                                N/A Off Dribble
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Hop/1-2 -->
+                    <details id="hop" data-field="Hop/1-2" class="bg-white p-4 rounded shadow" open>
+                        <summary class="filter-title font-semibold cursor-pointer">Hop/1-2</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="1-2 Left/Right" checked>
+                                1-2 Left/Right
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="1-2 Right/Left" checked>
+                                1-2 Right/Left
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Hop" checked>
+                                Hop
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Defender Distance -->
+                    <details id="defender_distance" data-field="Defender Distance" class="bg-white p-4 rounded shadow"
+                        open>
+                        <summary class="filter-title font-semibold cursor-pointer">Defender Distance</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Close" checked>
+                                Close
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Open" checked>
+                                Open
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Tight" checked>
+                                Tight
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Wide Open" checked>
+                                Wide Open
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Make/Miss -->
+                    <details id="make_miss" data-field="Make/Miss" class="bg-white p-4 rounded shadow" open>
+                        <summary class="filter-title font-semibold cursor-pointer">Make/Miss</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Make" checked>
+                                Make
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Miss" checked>
+                                Miss
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Offensive Action -->
+                    <details id="offensive_action" data-field="Offensive Action" class="bg-white p-4 rounded shadow"
+                        open>
+                        <summary class="filter-title font-semibold cursor-pointer">Offensive Action</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All</label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="DHO" checked>
+                                DHO
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Flare" checked>
+                                Flare
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Lift" checked>
+                                Lift
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="PnPop" checked>
+                                PnPop
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Post Kick Out" checked>
+                                Post Kick Out
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Drive Kick" checked>
+                                Drive Kick
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Iso" checked>
+                                Iso
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Pin Down" checked>
+                                Pin Down
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="PnR" checked>
+                                PnR
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Spot Up" checked>
+                                Spot Up
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Area -->
+                    <details id="area" data-field="Area" class="bg-white p-4 rounded shadow" open>
+                        <summary class="filter-title font-semibold cursor-pointer">Area</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Left Corner" checked>
+                                Left Corner
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Left Wing" checked>
+                                Left Wing
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Right Corner" checked>
+                                Right Corner
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Right Wing" checked>
+                                Right Wing
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Top" checked>
+                                Top
+                            </label>
+                        </div>
+                    </details>
+
+                    <!-- Off Dribble Hand -->
+                    <details id="off_dribble" data-field="Off Dribble Hand" class="bg-white p-4 rounded shadow" open>
+                        <summary class="filter-title font-semibold cursor-pointer">Player Direction</summary>
+                        <div class="filter-options mt-2 space-y-1">
+                            <label class="block">
+                                <input type="checkbox" class="all mr-2">
+                                All
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Left" checked>
+                                Left
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Left to RightPickup" checked>
+                                Left to RightPickup
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="N/A" checked>
+                                N/A
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Right" checked>
+                                Right
+                            </label>
+                            <label class="block">
+                                <input type="checkbox" class="item mr-2" value="Right to LeftPickup" checked>
+                                Right to LeftPickup
+                            </label>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+
+            <!-- Pie Charts -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="pieDD" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Defender Distance</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="pieFG" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Field Goals</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="pieFoot" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Footwork</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="pieArea" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Shot Area</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="pieAction" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Offensive Action</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="piePass" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Pass Direction</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="piePlay" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Player Direction</p>
+                </div>
+                <div class="bg-white p-4 rounded shadow text-center">
+                    <canvas id="pieOff" class="mx-auto"></canvas>
+                    <p class="mt-2 text-sm">Off Dribble</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    <!-- JS scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Tu inicialización
+            loadData(); // o cualquier setup inicial de filtros
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</body>
+
+</html>
